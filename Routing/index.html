@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Routing Demo</title>
+    <script src="angular.js"></script>
+    <script src="angular-route.js"></script>
+    <script>
+        var myApp = angular.module("myApp",["ngRoute"]);
+        myApp.config(function($routeProvider){
+           $routeProvider
+                .when("/products", {
+                    //template : "<h3>Products</h3>"
+                    templateUrl : "templates/productsTemplate.html",
+                    controller : "productsController"
+                })
+                .when("/products/:id", {
+                    templateUrl : "templates/productInfoTemplate.html",
+                    controller : "productInfoController"
+                })
+                .when("/customers", {
+                    //template : "<h3>Customers</h3>"
+                templateUrl : "templates/customersTemplate.html"
+                })
+                .otherwise({
+                    redirectTo : "/products"
+                });
+        });
+        myApp.factory("productsService", function(){
+            return {
+                getAll : function(){
+                    return [
+                        {id :1, name : "Pen", cost : 10, units : 100, desc : "Mandaremus est expetendis. An eram senserit, aute admodum nam doctrina. Vidisse tamen officia quamquam do non culpa transferrem. Cillum vidisse relinqueret. Mandaremus aute consequat de ab incididunt reprehenderit, sed fugiat qui noster, quae transferrem deserunt quem mandaremus. Cernantur cillum dolor non summis. Dolore et deserunt, officia ipsum excepteur admodum, ingeniis elit appellat tempor, si eiusmod distinguantur."},
+                        {id :2, name : "Hen", cost : 300, units : 20, desc : "Mandaremus est expetendis. An eram senserit, aute admodum nam doctrina. Vidisse tamen officia quamquam do non culpa transferrem. Cillum vidisse relinqueret. Mandaremus aute consequat de ab incididunt reprehenderit, sed fugiat qui noster, quae transferrem deserunt quem mandaremus. Cernantur cillum dolor non summis. Dolore et deserunt, officia ipsum excepteur admodum, ingeniis elit appellat tempor, si eiusmod distinguantur."},
+                        {id :3, name : "Ten", cost : 10, units : 10, desc : "Mandaremus est expetendis. An eram senserit, aute admodum nam doctrina. Vidisse tamen officia quamquam do non culpa transferrem. Cillum vidisse relinqueret. Mandaremus aute consequat de ab incididunt reprehenderit, sed fugiat qui noster, quae transferrem deserunt quem mandaremus. Cernantur cillum dolor non summis. Dolore et deserunt, officia ipsum excepteur admodum, ingeniis elit appellat tempor, si eiusmod distinguantur."},
+                        {id :4, name : "Zen", cost : 10000, units :2, desc : "Mandaremus est expetendis. An eram senserit, aute admodum nam doctrina. Vidisse tamen officia quamquam do non culpa transferrem. Cillum vidisse relinqueret. Mandaremus aute consequat de ab incididunt reprehenderit, sed fugiat qui noster, quae transferrem deserunt quem mandaremus. Cernantur cillum dolor non summis. Dolore et deserunt, officia ipsum excepteur admodum, ingeniis elit appellat tempor, si eiusmod distinguantur."}
+                    ];
+                }
+            }
+        });
+        myApp.controller("productsController", function($scope, productsService){
+            $scope.products = productsService.getAll();
+        });
+        myApp.controller("productInfoController", function($scope, $routeParams, productsService){
+            var productId = parseInt($routeParams.id,10);
+            $scope.product =  productsService.getAll().filter(function(product){
+                return product.id === productId;
+            })[0];
+        });
+    </script>
+</head>
+<body ng-app="myApp">
+    <h1>Routing Demo</h1>
+    <a href="#/products">Products</a>
+    <a href="#/customers">Customers</a>
+    <hr>
+    <div ng-view></div>
+</body>
+</html>
